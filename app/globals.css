@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------------------
+   Artemis Intelligence Design tokens
+   Aesthetic: light, clean, editorial. Refined whitespace, serif display type,
+   a single confident teal accent, hairline rules.
+---------------------------------------------------------------------------- */
+@theme {
+  /* Brand */
+  --color-teal: #16c9c3;
+  --color-teal-deep: #0d9c97; /* accessible teal for text on light */
+  --color-teal-ink: #06403e; /* deepest teal for dark sections */
+
+  /* Paper & ink */
+  --color-paper: #fbfbf8; /* warm off-white page background */
+  --color-paper-soft: #f4f3ee; /* alternating section tint */
+  --color-ink: #0f1413; /* near-black text */
+  --color-ink-soft: #4a524f; /* secondary text */
+  --color-line: #e7e6df; /* hairline borders */
+
+  /* Fonts (wired to next/font CSS variables) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  /* Easing */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  ::selection {
+    background-color: var(--color-teal);
+    color: #042f2d;
+  }
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
+  .font-poppins {
+    font-family: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  }
+  /* Editorial display heading: large, tight, refined */
+  .display-xl {
+    font-family: var(--font-display);
+    font-weight: 380;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  /* Section reveal-on-scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.9s var(--ease-out-soft),
+      transform 0.9s var(--ease-out-soft);
+    will-change: opacity, transform;
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+  /* Animated underline link */
+  .link-underline {
+    background-image: linear-gradient(var(--color-teal), var(--color-teal));
+    background-size: 0% 1.5px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s var(--ease-out-soft);
+  }
+  .link-underline:hover {
+    background-size: 100% 1.5px;
+  }
+  .grain {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(15, 20, 19, 0.04) 1px,
+      transparent 0
+    );
+    background-size: 22px 22px;
+  }
+}
