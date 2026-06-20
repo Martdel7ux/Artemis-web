@@ -29,7 +29,7 @@ export default function Hero() {
       </div>
 
       {/* Centered headline */}
-      <h1 className="font-poppins relative z-10 mx-auto max-w-4xl text-[clamp(2.05rem,6vw,5rem)] font-light uppercase leading-[1.12] tracking-[0.01em] text-white">
+      <h1 className="font-poppins relative z-10 mx-auto max-w-4xl text-[clamp(1.85rem,5vw,4.25rem)] font-light capitalize leading-[1.12] tracking-tight text-white">
         AI built with empathy.
         <br />
         Talent built for what&rsquo;s next.
