@@ -29,6 +29,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Offset anchor jumps so sections don't hide under the floating nav */
+    scroll-padding-top: 6rem;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -36,6 +38,14 @@
     background-color: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
+    /* Guard against any horizontal scroll from blurred decorative glows */
+    overflow-x: hidden;
+  }
+  /* Media never overflows its container on small screens */
+  img,
+  video,
+  iframe {
+    max-width: 100%;
   }
   ::selection {
     background-color: var(--color-teal);
