@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+const DURATION = 7000;
+
 const ITEMS = [
   {
     quote:
@@ -28,34 +30,42 @@ const ITEMS = [
 
 export default function Testimonials() {
   const [i, setI] = useState(0);
+  const go = useCallback((n: number) => setI((n + ITEMS.length) % ITEMS.length), []);
   const next = useCallback(() => setI((v) => (v + 1) % ITEMS.length), []);
-  const prev = () => setI((v) => (v - 1 + ITEMS.length) % ITEMS.length);
 
   useEffect(() => {
-    const t = setInterval(next, 6500);
-    return () => clearInterval(t);
-  }, [next]);
+    const t = setTimeout(next, DURATION);
+    return () => clearTimeout(t);
+  }, [i, next]);
 
   const item = ITEMS[i];
 
   return (
-    <section id="testimonials" className="bg-teal px-5 py-24 sm:px-8 md:py-32">
+    <section id="testimonials" className="relative overflow-hidden bg-teal px-5 py-28 sm:px-8 md:py-40">
       <div className="mx-auto max-w-5xl">
         <p className="eyebrow text-teal-ink/70">Our interns say</p>
 
-        <div className="mt-10 min-h-[18rem] md:min-h-[16rem]">
+        {/* Oversized quotation mark */}
+        <div
+          aria-hidden
+          className="pointer-events-none -mb-10 font-display text-[10rem] leading-none text-white/25 md:text-[14rem]"
+        >
+          &ldquo;
+        </div>
+
+        <div className="relative min-h-[15rem] md:min-h-[13rem]">
           <blockquote
-            key={i}
-            className="font-display text-[clamp(1.6rem,3.6vw,2.9rem)] leading-tight text-white"
-            style={{ animation: "fadeUp 0.7s var(--ease-out-soft) both" }}
+            key={`q-${i}`}
+            className="max-w-4xl font-display text-[clamp(1.6rem,3.8vw,3rem)] font-normal leading-[1.18] text-white"
+            style={{ animation: "tBlurIn 0.8s cubic-bezier(0.16,1,0.3,1) both" }}
           >
-            &ldquo;{item.quote}&rdquo;
+            {item.quote}
           </blockquote>
 
           <div
             key={`m-${i}`}
-            className="mt-8 flex items-center gap-4"
-            style={{ animation: "fadeUp 0.7s 0.05s var(--ease-out-soft) both" }}
+            className="mt-10 flex items-center gap-4"
+            style={{ animation: "tBlurIn 0.8s 0.1s cubic-bezier(0.16,1,0.3,1) both" }}
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-ink font-display text-sm text-white">
               {item.initials}
@@ -67,22 +77,31 @@ export default function Testimonials() {
           </div>
         </div>
 
-        <div className="mt-10 flex items-center justify-between">
-          <div className="flex gap-2.5">
+        {/* Controls: progress segments + arrows */}
+        <div className="mt-12 flex items-center justify-between">
+          <div className="flex flex-1 gap-3 pr-8 sm:max-w-sm">
             {ITEMS.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => setI(idx)}
-                aria-label={`Go to testimonial ${idx + 1}`}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  idx === i ? "w-8 bg-white" : "w-2.5 bg-white/40 hover:bg-white/70"
-                }`}
-              />
+                onClick={() => go(idx)}
+                aria-label={`Testimonial ${idx + 1}`}
+                className="group relative h-1 flex-1 overflow-hidden rounded-full bg-white/30"
+              >
+                <span
+                  className="absolute inset-y-0 left-0 rounded-full bg-white"
+                  style={
+                    idx === i
+                      ? { animation: `tFill ${DURATION}ms linear both` }
+                      : { width: idx < i ? "100%" : "0%" }
+                  }
+                />
+              </button>
             ))}
           </div>
+
           <div className="flex gap-3">
             <button
-              onClick={prev}
+              onClick={() => go(i - 1)}
               aria-label="Previous"
               className="flex h-11 w-11 items-center justify-center rounded-full border border-white/40 text-white transition hover:bg-white hover:text-teal-ink"
             >
@@ -91,7 +110,7 @@ export default function Testimonials() {
               </svg>
             </button>
             <button
-              onClick={next}
+              onClick={() => go(i + 1)}
               aria-label="Next"
               className="flex h-11 w-11 items-center justify-center rounded-full border border-white/40 text-white transition hover:bg-white hover:text-teal-ink"
             >
@@ -104,9 +123,16 @@ export default function Testimonials() {
       </div>
 
       <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: none; }
+        @keyframes tBlurIn {
+          from { opacity: 0; transform: translateY(18px); filter: blur(8px); }
+          to { opacity: 1; transform: none; filter: blur(0); }
+        }
+        @keyframes tFill {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="tBlurIn"], [style*="tFill"] { animation: none !important; }
         }
       `}</style>
     </section>
