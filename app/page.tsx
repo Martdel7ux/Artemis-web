@@ -1,4 +1,3 @@
-import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import Solutions from "@/components/Solutions";
 import Stats from "@/components/Stats";
@@ -8,24 +7,19 @@ import Work from "@/components/Work";
 import Testimonials from "@/components/Testimonials";
 import Partners from "@/components/Partners";
 import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <>
-      <Nav />
-      <main>
-        <Hero />
-        <Solutions />
-        <Stats />
-        <About />
-        <Academy />
-        <Work />
-        <Testimonials />
-        <Partners />
-        <Contact />
-      </main>
-      <Footer />
-    </>
+    <main>
+      <Hero />
+      <Solutions />
+      <Stats />
+      <About />
+      <Academy />
+      <Work />
+      <Testimonials />
+      <Partners />
+      <Contact />
+    </main>
   );
 }

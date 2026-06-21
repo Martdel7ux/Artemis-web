@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Logo from "./Logo";
 
 export default function Footer() {
@@ -57,10 +58,12 @@ export default function Footer() {
         <div className="mt-16 flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-paper/45 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Artemis Intelligence. All rights reserved.</p>
           <nav className="flex flex-wrap gap-x-7 gap-y-2">
-            <a href="#solutions" className="transition hover:text-paper">Solutions</a>
-            <a href="#academy" className="transition hover:text-paper">Academy</a>
-            <a href="#work" className="transition hover:text-paper">Work</a>
-            <a href="#contact" className="transition hover:text-paper">Contact</a>
+            <Link href="/solutions" className="transition hover:text-paper">Solutions</Link>
+            <Link href="/academy" className="transition hover:text-paper">Academy</Link>
+            <Link href="/work" className="transition hover:text-paper">Work</Link>
+            <Link href="/about" className="transition hover:text-paper">About</Link>
+            <Link href="/partners" className="transition hover:text-paper">Partners</Link>
+            <Link href="/contact" className="transition hover:text-paper">Contact</Link>
           </nav>
         </div>
       </div>

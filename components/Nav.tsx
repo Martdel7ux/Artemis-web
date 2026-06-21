@@ -1,17 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 
 const LINKS = [
-  { href: "#solutions", label: "Solutions" },
-  { href: "#academy", label: "Academy" },
-  { href: "#work", label: "Work" },
-  { href: "#about", label: "About" },
-  { href: "#partners", label: "Partners" },
+  { href: "/about", label: "About" },
+  { href: "/work", label: "Work" },
+  { href: "/solutions", label: "Solutions" },
+  { href: "/academy", label: "Academy" },
+  { href: "/partners", label: "Partners" },
 ];
 
 export default function Nav() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -29,8 +32,13 @@ export default function Nav() {
     };
   }, [open]);
 
-  // Over the dark hero video (top of page, menu closed) we invert to light tones.
-  const onDark = !scrolled && !open;
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // Only the home page has a dark hero video to invert against.
+  const onDark = pathname === "/" && !scrolled && !open;
 
   return (
     <header className="fixed inset-x-0 top-3 z-50 px-4 sm:top-5 sm:px-6">
@@ -43,29 +51,34 @@ export default function Nav() {
             : "border-white/70 bg-white/65 shadow-[0_10px_40px_rgba(15,20,19,0.10)] ring-1 ring-black/[0.03] backdrop-blur-2xl"
         }`}
       >
-        <a href="#home" aria-label="Artemis Intelligence home">
+        <Link href="/" aria-label="Artemis Intelligence home">
           <Logo tone={onDark ? "white" : "ink"} />
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-9 lg:flex">
-          {LINKS.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className={`link-underline text-[0.95rem] font-medium transition-colors ${
-                onDark
-                  ? "text-white/80 hover:text-white"
-                  : "text-ink-soft hover:text-ink"
-              }`}
-            >
-              {l.label}
-            </a>
-          ))}
+          {LINKS.map((l) => {
+            const active = pathname === l.href;
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`link-underline text-[0.95rem] font-medium transition-colors ${
+                  onDark
+                    ? "text-white/80 hover:text-white"
+                    : active
+                      ? "text-teal-deep"
+                      : "text-ink-soft hover:text-ink"
+                }`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <a
-            href="#contact"
+          <Link
+            href="/contact"
             className={`group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
               onDark
                 ? "border border-white/40 text-white hover:bg-white hover:text-ink"
@@ -88,7 +101,7 @@ export default function Nav() {
                 strokeLinejoin="round"
               />
             </svg>
-          </a>
+          </Link>
         </div>
 
         <button
@@ -127,7 +140,7 @@ export default function Nav() {
       >
         <div className="flex h-full flex-col justify-center gap-2 px-8">
           {LINKS.map((l, i) => (
-            <a
+            <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
@@ -141,15 +154,15 @@ export default function Nav() {
               }}
             >
               {l.label}
-            </a>
+            </Link>
           ))}
-          <a
-            href="#contact"
+          <Link
+            href="/contact"
             onClick={() => setOpen(false)}
             className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-ink px-6 py-3 text-base font-medium text-paper"
           >
             Get in touch
-          </a>
+          </Link>
         </div>
       </div>
     </header>
