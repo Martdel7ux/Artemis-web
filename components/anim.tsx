@@ -5,12 +5,19 @@ import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 export const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 /** Fires `true` once the element scrolls into view, then disconnects. */
-export function useInView<T extends HTMLElement>(threshold = 0.2) {
+export function useInView<T extends HTMLElement>(threshold = 0.15) {
   const ref = useRef<T | null>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+
+    // Fallback: if observers aren't available, just show the content.
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+
     const obs = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {
@@ -18,7 +25,9 @@ export function useInView<T extends HTMLElement>(threshold = 0.2) {
           obs.disconnect();
         }
       },
-      { threshold, rootMargin: "0px 0px -10% 0px" }
+      // Cap the threshold so tall sections on small screens still trigger early,
+      // and expand the root downward so reveals fire just before entering view.
+      { threshold: Math.min(threshold, 0.1), rootMargin: "0px 0px 12% 0px" }
     );
     obs.observe(node);
     return () => obs.disconnect();
@@ -52,7 +61,7 @@ export function WordReveal({
               className="inline-block"
               style={{
                 opacity: inView ? 1 : 0,
-                filter: inView ? "blur(0px)" : "blur(10px)",
+                filter: inView ? "blur(0px)" : "blur(6px)",
                 transform: inView ? "translateY(0)" : "translateY(0.5em)",
                 transition: `opacity 0.8s ${EASE}, filter 0.8s ${EASE}, transform 0.8s ${EASE}`,
                 transitionDelay: `${start + i * step}ms`,
